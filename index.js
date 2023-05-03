@@ -28,7 +28,7 @@ app.get("/records", (req, res) => {
 
         if (req.body.reasonforvist === "medicalrecords") {
             //return medical records
-            
+
             res.status(200).send(records[req.headers.ssn]);
         }
         else {
@@ -48,7 +48,10 @@ app.get("/records", (req, res) => {
 
 // Create a new patient
 app.post("/", (req, res) => {
-    res.status(200).send({"msg": "HTTP POST - SUCCESS!"})
+    
+    // Create patient in database
+    patients[req.headers.ssn] = [req.headers.firstname, req.headers.lastname, req.headers.phone]
+    res.status(200).send({patients})
 });
 
 
