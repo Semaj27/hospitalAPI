@@ -57,6 +57,29 @@ app.post("/", (req, res) => {
 
 // Update existing patient phone number
 app.put("/", (req, res) => {
+
+     // Verify Patient Exists
+     if (records[req.headers.ssn] === undefined){
+        res.status(404).send({"msg": "Patient not found."})
+        return;
+    }
+
+    // Verifty SSN matches First and Last Name
+    if (req.headers.firstname == patients[req.headers.ssn][0] && req.headers.lastname == patients[req.headers.ssn][1]) {
+        // Update the phone number and return the patient info
+
+        patients[req.headers.ssn] = [req.headers.firstname, req.headers.lastname, req.body.phone];
+        res.status(202).send(patients[req.headers.ssn]);
+        return;        
+    }
+    else {
+        res.status(401).send({"msg": "First or last did not match. (Phone Number))"})
+        return;
+    }    
+
+
+
+    // Make sure 
     res.status(200).send({"msg": "HTTP PUT - SUCCESS!"})
 });
 
