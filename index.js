@@ -76,18 +76,33 @@ app.put("/", (req, res) => {
         res.status(401).send({"msg": "First or last did not match. (Phone Number))"})
         return;
     }    
-
-
-
-    // Make sure 
-    res.status(200).send({"msg": "HTTP PUT - SUCCESS!"})
 });
 
 
 
 // Delete patient records 
 app.delete("/", (req, res) => {
-    res.status(200).send({"msg": "HTTP DELETE - SUCCESS!"})
+
+    // Verify Patient Exists
+    if (records[req.headers.ssn] === undefined){
+        res.status(404).send({"msg": "Patient not found."})
+        return;
+    };
+
+    // Verifty SSN matches First and Last Name
+    if (req.headers.firstname == patients[req.headers.ssn][0] && req.headers.lastname == patients[req.headers.ssn][1]) {
+        // Delete patient and medical records from database
+
+        delete patients[req.headers.ssn]
+        delete records[req.headers.ssn]
+
+        res.status(200).send(patients);
+        return;
+    }
+    else {
+        res.status(401).send({"msg": "First or last did not match. (Delete)"})
+        return;
+    }
 });
 
 
